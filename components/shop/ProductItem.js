@@ -1,28 +1,34 @@
 import React from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import { Button, Image, Platform, StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../../constants/Colors';
 import { Images } from '../../constants/Images';
 
 const ProductItem = ({ id, ownerId, title, price, onViewDetail, onAddToCart }) => {
+  const TouchableComponent = (Platform.OS === 'android' && Platform.Version >= 21) ? TouchableNativeFeedback : TouchableOpacity;
+
   return (
     <View style={styles.product}>
-      <Image style={styles.image} source={Images[id]} />
-      <View style={styles.details}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.price}>${price}</Text>
-      </View>
-      <View style={styles.actions}>
-        <Button
-          color={Colors.primary}
-          title='View Details'
-        // onPress={onViewDetail}
-        />
-        <Button
-          color={Colors.primary}
-          title='To Cart'
-        // onPress={onAddToCart}
-        />
-      </View>
+      <TouchableComponent useForeground onPress={onViewDetail}>
+        <View>
+          <Image style={styles.image} source={Images[id]} />
+          <View style={styles.details}>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.price}>${price}</Text>
+          </View>
+          <View style={styles.actions}>
+            <Button
+              color={Colors.primary}
+              title='View Details'
+              onPress={onViewDetail}
+            />
+            <Button
+              color={Colors.primary}
+              title='To Cart'
+            // onPress={onAddToCart}
+            />
+          </View>
+        </View> 
+      </TouchableComponent>
     </View>
   );
 };
