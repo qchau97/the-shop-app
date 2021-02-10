@@ -3,7 +3,7 @@ import { Button, Image, Platform, StyleSheet, Text, TouchableNativeFeedback, Tou
 import { Colors } from '../../constants/Colors';
 import { Images } from '../../constants/Images';
 
-const ProductItem = ({ id, ownerId, title, price, onViewDetail, onAddToCart }) => {
+const ProductItem = ({ id, title, price, onViewDetail, onAddToCart }) => {
   const TouchableComponent = (Platform.OS === 'android' && Platform.Version >= 21) ? TouchableNativeFeedback : TouchableOpacity;
 
   return (
@@ -13,7 +13,7 @@ const ProductItem = ({ id, ownerId, title, price, onViewDetail, onAddToCart }) =
           <Image style={styles.image} source={Images[id]} />
           <View style={styles.details}>
             <Text style={styles.title}>{title}</Text>
-            <Text style={styles.price}>${price}</Text>
+            <Text style={styles.price}>${price.toFixed(2)}</Text>
           </View>
           <View style={styles.actions}>
             <Button
@@ -24,10 +24,10 @@ const ProductItem = ({ id, ownerId, title, price, onViewDetail, onAddToCart }) =
             <Button
               color={Colors.primary}
               title='To Cart'
-            // onPress={onAddToCart}
+              onPress={onAddToCart}
             />
           </View>
-        </View> 
+        </View>
       </TouchableComponent>
     </View>
   );

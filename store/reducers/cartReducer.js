@@ -2,36 +2,35 @@ import { ADD_TO_CART } from '../actions/cart';
 import CartItem from '../../models/cart-item';
 
 const INITIAL_STATE = {
-  items: [],
+  items: {},
   totalAmount: 0,
 };
 
 const cartReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ADD_TO_CART:
-      const addedItem = action.payload.product;
+      const addedItem = action.payload;
       const itemPrice = addedItem.price;
       const itemTitle = addedItem.title;
       let updatedOrNewItem;
 
       if (state.items[addedItem.id]) {
         updatedOrNewItem = new CartItem(
-          state.items[addedItem].quantity + 1,
+          state.items[addedItem.id].quantity + 1,
           itemPrice,
           itemTitle,
-          state.items[addedItem].sum + itemPrice
+          state.items[addedItem.id].sum + itemPrice
         );
       } else {
-        updatedOrNewItem = new CartItem(1, itemPrice, itemTitle, itemPrice * 1);
+        updatedOrNewItem = new CartItem(1, itemPrice, itemTitle, itemPrice);
       }
       return {
         ...state,
         items: { ...state.items, [addedItem.id]: updatedOrNewItem },
-        totalAmount: totalAmount + itemPrice,
-      }
-    default:
-      return state;
+        totalAmount: state.totalAmount + itemPrice,
+      };
   }
+  return state;
 };
 
 export default cartReducer;

@@ -1,0 +1,69 @@
+import React from 'react';
+import { Button, StyleSheet, Text, View, FlatList } from 'react-native';
+import { useSelector } from 'react-redux';
+import { Colors } from '../../constants/Colors';
+
+const CartScreen = () => {
+  const totalAmount = useSelector(state => state.cart.totalAmount);
+  const cartItems = useSelector(state => {
+    const cartItemsArray = [];
+    for (const key in state.cart.items) {
+      cartItemsArray.push({
+        itemId: key,
+        quantity: state.cart.items[key].quantity,
+        itemPrice: state.cart.items[key].itemPrice,
+        itemTitle: state.cart.items[key].itemTitle,
+        sum: state.cart.items[key].sum
+      });
+    }
+    return cartItemsArray;
+  });
+
+
+  return (
+    <View style={styles.screen}>
+      <View style={styles.summary}>
+        <Text style={styles.summaryText}>Total: <Text style={styles.amount}>${totalAmount.toFixed(2)}</Text></Text>
+        <Button
+          color={Colors.accent}
+          title='Order Now'
+          disabled={cartItems.length === 0}
+        />
+      </View>
+      {/* <FlatList /> */}
+      <View>
+        <Text>CART ITEMS</Text>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  screen: {
+    margin: 20,
+  },
+  summary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 5,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+  },
+  summaryText: {
+    fontFamily: 'OpenSans-Bold',
+    fontSize: 18,
+  },
+  amount: {
+    color: Colors.primary,
+  },
+});
+
+export default CartScreen;
+

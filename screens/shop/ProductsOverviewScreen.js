@@ -1,27 +1,29 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import React from 'react';
+import { FlatList, Platform, StyleSheet } from 'react-native';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
+import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
 import addToCart from '../../store/actions/cart';
 
-const ProductsOverviewScreen = ({navigation}) => {
+const ProductsOverviewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const products = useSelector(state => state.products.availableProducts);
 
-  const renderProductItem = ({item}) => {    
+  const renderProductItem = (itemData) => {
     return (
       <ProductItem
-        id={item.id}
-        ownerId={item.ownerId}
-        title={item.title}
-        price={item.price}
+        id={itemData.item.id}
+        ownerId={itemData.item.ownerId}
+        title={itemData.item.title}
+        price={itemData.item.price}
         onViewDetail={() => {
           navigation.navigate('ProductDetail', {
-            productId: item.id,
-            productTitle: item.title,
+            productId: itemData.item.id,
+            productTitle: itemData.item.title,
           })
-        } }
-        onAddToCart={dispatch(addToCart({item}))}
+        }}
+        onAddToCart={() => dispatch(addToCart(itemData.item))}
       />
     )
   }
@@ -34,11 +36,22 @@ const ProductsOverviewScreen = ({navigation}) => {
   );
 };
 
-ProductsOverviewScreen.navigationOptions = {
-  headerTitle: 'All Products'
+ProductsOverviewScreen.navigationOptions = navigationData => {
+  return {
+    headerTitle: 'All Products',
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title='Cart' // If there are many icons, each title must be unique as a key
+          iconName={Platform.OS === 'android' ? 'cart-outline' : 'cart'}
+          onPress={() => {
+            navigationData.navigation.navigate('Cart');
+          }}
+        />
+      </HeaderButtons>
+    ),
+  }
 };
-
-const styles = StyleSheet.create({});
 
 export default ProductsOverviewScreen;
 

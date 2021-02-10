@@ -40,7 +40,6 @@ const PRODUCTS = [
     'p6',
     'u1',
     'Pen & Paper',
-    require('../assets/images/PenAndPaper.jpg'),
     "Can be used for role-playing (not the kind of role-playing you're thinking about...).",
     5.49
   )
