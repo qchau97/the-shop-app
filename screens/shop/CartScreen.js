@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, StyleSheet, Text, View, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
+import CartItem from '../../components/shop/CartItem';
 import { Colors } from '../../constants/Colors';
 
 const CartScreen = () => {
@@ -11,14 +12,23 @@ const CartScreen = () => {
       cartItemsArray.push({
         itemId: key,
         quantity: state.cart.items[key].quantity,
-        itemPrice: state.cart.items[key].itemPrice,
-        itemTitle: state.cart.items[key].itemTitle,
+        itemPrice: state.cart.items[key].productPrice,
+        itemTitle: state.cart.items[key].productTitle,
         sum: state.cart.items[key].sum
       });
     }
     return cartItemsArray;
   });
-
+  const renderCartItem = (itemData) => {
+    return (
+      <CartItem
+        quantity={itemData.item.quantity}
+        title={itemData.item.itemTitle}
+        amount={itemData.item.sum}
+        onRemove={() => { }}
+      />
+    )
+  }
 
   return (
     <View style={styles.screen}>
@@ -30,10 +40,11 @@ const CartScreen = () => {
           disabled={cartItems.length === 0}
         />
       </View>
-      {/* <FlatList /> */}
-      <View>
-        <Text>CART ITEMS</Text>
-      </View>
+      <FlatList
+        keyExtractor={item => item.itemId}
+        data={cartItems}
+        renderItem={renderCartItem}
+      />
     </View>
   );
 };
