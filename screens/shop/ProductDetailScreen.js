@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, Image, Button } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '../../constants/Colors';
 import { Images } from '../../constants/Images';
-import addToCart from '../../store/actions/cart';
+import { addToCart } from '../../store/actions/cart';
 
 const ProductDetailScreen = ({ navigation }) => {
   const dispatch = useDispatch();

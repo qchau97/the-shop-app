@@ -4,7 +4,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
-import addToCart from '../../store/actions/cart';
+import { addToCart } from '../../store/actions/cart';
 
 const ProductsOverviewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
