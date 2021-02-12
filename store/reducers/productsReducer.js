@@ -1,4 +1,6 @@
 import PRODUCTS from '../../data/dummy-data';
+import { DELETE_PRODUCT } from '../actions/products';
+
 const INITIAL_STATE = {
   availableProducts: PRODUCTS,
   userProducts: PRODUCTS.filter(product => product.ownerId === 'u1')
@@ -6,9 +8,14 @@ const INITIAL_STATE = {
 
 const productsReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    
-    default: 
-    return state;
+    case DELETE_PRODUCT:
+      return {
+        ...state,
+        userProducts: state.userProducts.filter(product => product.id !== action.payload),
+        availableProducts: state.availableProducts.filter(product => product.id !== action.payload),
+      }
+    default:
+      return state;
   }
 };
 
