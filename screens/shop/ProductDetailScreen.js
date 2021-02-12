@@ -11,15 +11,11 @@ const ProductDetailScreen = ({ navigation }) => {
   const products = useSelector(state => state.products.availableProducts);
   const selectedProduct = products.find(product => product.id === productId);
 
-  const handlePressAddToCartButton = (selectedProduct) => {
-    dispatch(addToCart(selectedProduct));
-  }
-
   return (
     <ScrollView>
       <Image style={styles.image} source={Images[productId]} />
       <View style={styles.actions}>
-        <Button color={Colors.primary} title='Add to Cart' onPress={handlePressAddToCartButton} />
+        <Button color={Colors.primary} title='Add to Cart' onPress={() => dispatch(addToCart(selectedProduct))} />
       </View>
       <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
       <Text style={styles.description}>{selectedProduct.description}</Text>
