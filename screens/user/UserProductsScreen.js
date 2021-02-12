@@ -11,23 +11,25 @@ const UserProductsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const userProducts = useSelector(state => state.products.userProducts);
 
+  const handleEditUserProduct = (id, title) => {
+    navigation.navigate('EditProduct', {
+      productId: id,
+      productTitle: title,
+    })
+  };
+
   const renderUserProductItem = (itemData) => {
     return (
       <ProductItem
         id={itemData.item.id}
         title={itemData.item.title}
         price={itemData.item.price}
-        onSelect={() => {
-          navigation.navigate('ProductDetail', {
-            productId: itemData.item.id,
-            productTitle: itemData.item.title,
-          })
-        }}
+        onSelect={() => handleEditUserProduct(itemData.item.id, itemData.item.title)}
       >
         <Button
           color={Colors.primary}
           title='Edit'
-          onPress={() => { }}
+          onPress={() => handleEditUserProduct(itemData.item.id, itemData.item.title)}
         />
         <Button
           color={Colors.primary}
@@ -58,6 +60,15 @@ UserProductsScreen.navigationOptions = navigationData => {
           title='Menu'
           iconName={Platform.OS === 'android' ? 'menu-outline' : 'menu'}
           onPress={() => navigationData.navigation.toggleDrawer()}
+        />
+      </HeaderButtons>
+    ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title='Add'
+          iconName={Platform.OS === 'android' ? 'pencil-outline' : 'pencil'}
+          onPress={() => navigationData.navigation.navigate('EditProduct')}
         />
       </HeaderButtons>
     ),
