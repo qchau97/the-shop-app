@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Platform, StyleSheet } from 'react-native';
+import { FlatList, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
@@ -39,10 +39,19 @@ const ProductsOverviewScreen = ({ navigation }) => {
 ProductsOverviewScreen.navigationOptions = navigationData => {
   return {
     headerTitle: 'All Products',
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title='Menu'
+          iconName={Platform.OS === 'android' ? 'menu-outline' : 'menu'}
+          onPress={() => navigationData.navigation.toggleDrawer()}
+        />
+      </HeaderButtons>
+    ),
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
-          title='Cart' // If there are many icons, each title must be unique as a key
+          title='Cart'
           iconName={Platform.OS === 'android' ? 'cart-outline' : 'cart'}
           onPress={() => {
             navigationData.navigation.navigate('Cart');
@@ -54,4 +63,3 @@ ProductsOverviewScreen.navigationOptions = navigationData => {
 };
 
 export default ProductsOverviewScreen;
-

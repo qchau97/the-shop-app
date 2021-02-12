@@ -42,7 +42,7 @@ const CartScreen = () => {
           color={Colors.accent}
           title='Order Now'
           disabled={cartItems.length === 0}
-          onPress={() => dispatch(addOrder(cartItemsArray, totalAmount))}
+          onPress={() => dispatch(addOrder(cartItems, totalAmount))}
         />
       </View>
       <FlatList
@@ -52,6 +52,10 @@ const CartScreen = () => {
       />
     </View>
   );
+};
+
+CartScreen.navigationOptions = {
+  headerTitle: 'Your Cart',
 };
 
 const styles = StyleSheet.create({
