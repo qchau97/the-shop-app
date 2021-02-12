@@ -26,6 +26,7 @@ const CartScreen = () => {
   const renderCartItem = (itemData) => {
     return (
       <CartItem
+        deletable
         quantity={itemData.item.quantity}
         title={itemData.item.itemTitle}
         amount={itemData.item.sum}

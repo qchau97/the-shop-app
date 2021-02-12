@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const CartItem = ({ quantity, title, amount, onRemove }) => {
+const CartItem = ({ deletable, quantity, title, amount, onRemove }) => {
   return (
     <View style={styles.cartItem}>
       <View style={styles.itemData}>
@@ -11,13 +11,13 @@ const CartItem = ({ quantity, title, amount, onRemove }) => {
       </View>
       <View style={styles.itemData}>
         <Text style={styles.mainText}>${amount.toFixed(2)}</Text>
-        <TouchableOpacity onPress={onRemove} style={styles.deleteButton}>
-          <Ionicons 
-          name={Platform.OS === 'android' ? 'trash-outline' : 'trash'}
-          size={23}
-          color='#ff0000'
+        {deletable && <TouchableOpacity onPress={onRemove} style={styles.deleteButton}>
+          <Ionicons
+            name={Platform.OS === 'android' ? 'trash-outline' : 'trash'}
+            size={23}
+            color='#ff0000'
           />
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
     </View>
   )

@@ -6,12 +6,13 @@ import { useSelector } from 'react-redux';
 import OrderItem from '../../components/shop/OrderItem';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
 
-const OrdersScreen = props => {
+const OrdersScreen = () => {
   const orders = useSelector(state => state.orders.orders);
 
   const renderOrderItem = (itemData) => {
     return (
       <OrderItem
+      items={itemData.item.items}
       amount={itemData.item.totalAmount}
       date={itemData.item.readableDate}
       />
@@ -39,7 +40,7 @@ OrdersScreen.navigationOptions = navigationData => {
         />
       </HeaderButtons>
     ),
-  }
+  };
 };
 
 export default OrdersScreen;
