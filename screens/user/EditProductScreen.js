@@ -1,25 +1,48 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useReducer } from 'react';
 import { Alert, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
 import { createProduct, updateProduct } from '../../store/actions/products';
 
+// Create actions
+const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+
+// Create reducer
+const formReducer = (state, action) => {
+  switch (action.type) {
+    case FORM_INPUT_UPDATE:
+  }
+}
+
 const EditProductScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const editedProductId = navigation.getParam('productId');
   const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === editedProductId));
-  const [title, setTitle] = useState(editedProduct ? editedProduct.title : '');
-  const [isTitleValid, setIsTitleValid] = useState(false);
-  // const [imageUrl, setImageUrl] = useState(editedProduct ? editedProduct.title : '');
-  const [price, setPrice] = useState(editedProduct ? editedProduct.price.toString() : '');
-  const [description, setDescription] = useState(editedProduct ? editedProduct.description : '');
 
-  const handlePriceChange = (newPrice) => {
-    if (!editedProduct) {
-      setPrice(newPrice);
-    }
-  };
+  // const handlePriceChange = (newPrice) => {
+  //   if (!editedProduct) {
+  //     setPrice(newPrice);
+  //   }
+  // };
+
+  // Using useReducer instead of useState for state management
+  // const [state, dispatch] = useReducer(reducer, initialArg, init);
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      title: editedProduct ? editedProduct.title : '',
+      // imageUrl: editedProduct ? editedProduct.imageUrl : '',
+      description: editedProduct ? editedProduct.description : '',
+      price: editedProduct ? editedProduct.price.toString() : '',
+    },
+    inputValidities: {
+      title: editedProduct ? true : false,
+      // imageUrl: editedProduct ? true : false,
+      description: editedProduct ? true : false,
+      price: editedProduct ? true : false,
+    },
+    isFormValid: editedProduct ? true : false,
+  });
 
   // useCallback ensures that handleFormSubmit function is not re-created when component re-renders
   // Therefore avoid entering infinite loop
@@ -36,7 +59,7 @@ const EditProductScreen = ({ navigation }) => {
       dispatch(updateProduct(editedProductId, title, description));
     }
     navigation.goBack();
-  }, [dispatch, editedProductId, title, description, price]);
+  }, [isTitleValid, dispatch, editedProductId, title, description, price]);
 
   useEffect(() => {
     navigation.setParams({
@@ -45,12 +68,18 @@ const EditProductScreen = ({ navigation }) => {
   }, [handleFormSubmit]);
 
   const handleTitleChange = (text) => {
-    if (text.trim().length === 0) {
-      setIsTitleValid(false);
-    } else {
-      setIsTitleValid(true);
+    let isTitleValid = false;
+    if (text.trim().length > 0) {
+      isTitleValid = true;
     }
-    setTitle(text);
+    dispatchFormState({
+      type: FORM_INPUT_UPDATE,
+      payload: {
+        value: text,
+        isTitleValid: isTitleValid,
+        input: 'title', // let our reducer know which input triggers this
+      }    
+    })
   };
 
   return (
