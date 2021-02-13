@@ -28,6 +28,7 @@ const EditProductScreen = ({ navigation }) => {
     } else {
       dispatch(updateProduct(editedProductId, title, description));
     };
+    navigation.goBack();
   }, [dispatch, editedProductId, title, description, price]);
 
   useEffect(() => {
