@@ -46,6 +46,10 @@ const EditProductScreen = ({ navigation }) => {
             style={styles.input}
             value={title}
             onChangeText={text => setTitle(text)}
+            keyboardType='default'
+            autoCapitalize='sentences'
+            autoCorrect
+            returnKeyType='next'
           />
         </View>
         {/* <View style={styles.formControl}>
@@ -62,6 +66,7 @@ const EditProductScreen = ({ navigation }) => {
             style={styles.input}
             value={price}
             onChangeText={handlePriceChange}
+            keyboardType='decimal-pad'
           />
         </View>
         <View style={styles.formControl}>
@@ -70,6 +75,8 @@ const EditProductScreen = ({ navigation }) => {
             style={styles.input}
             value={description}
             onChangeText={text => setDescription(text)}
+            keyboardType='default'
+            autoCapitalize='sentences'
           />
         </View>
       </View>

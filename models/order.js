@@ -5,7 +5,7 @@ class Order {
     this.id = id,
     this.items = items,
     this.totalAmount = totalAmount,
-    this.date = date,
+    this.date = date
   }
   get readableDate() {
     // return this.date.toLocaleDateString('en-EN', {
