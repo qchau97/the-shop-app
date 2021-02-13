@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TextInput, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
+import { createProduct, updateProduct } from '../../store/actions/products';
 
 const EditProductScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const editedProductId = navigation.getParam('productId');
   const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === editedProductId));
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : '');
@@ -21,8 +23,12 @@ const EditProductScreen = ({ navigation }) => {
   // useCallback ensures that handleFormSubmit function is not re-created when component re-renders
   // Therefore avoid entering infinite loop
   const handleFormSubmit = useCallback(() => {
-    console.log('submitting');
-  }, []);
+    if (!editedProduct) {
+      dispatch(createProduct(title, description, +price));
+    } else {
+      dispatch(updateProduct(editedProductId, title, description));
+    };
+  }, [dispatch, editedProductId, title, description, price]);
 
   useEffect(() => {
     navigation.setParams({
