@@ -11,10 +11,9 @@ const UserProductsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const userProducts = useSelector(state => state.products.userProducts);
 
-  const handleEditUserProduct = (id, title) => {
+  const handleEditUserProduct = (id) => {
     navigation.navigate('EditProduct', {
       productId: id,
-      productTitle: title,
     })
   };
 
@@ -24,12 +23,12 @@ const UserProductsScreen = ({ navigation }) => {
         id={itemData.item.id}
         title={itemData.item.title}
         price={itemData.item.price}
-        onSelect={() => handleEditUserProduct(itemData.item.id, itemData.item.title)}
+        onSelect={() => handleEditUserProduct(itemData.item.id)}
       >
         <Button
           color={Colors.primary}
           title='Edit'
-          onPress={() => handleEditUserProduct(itemData.item.id, itemData.item.title)}
+          onPress={() => handleEditUserProduct(itemData.item.id)}
         />
         <Button
           color={Colors.primary}
