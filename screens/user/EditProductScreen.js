@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
@@ -10,6 +10,7 @@ const EditProductScreen = ({ navigation }) => {
   const editedProductId = navigation.getParam('productId');
   const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === editedProductId));
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : '');
+  const [isTitleValid, setIsTitleValid] = useState(false);
   // const [imageUrl, setImageUrl] = useState(editedProduct ? editedProduct.title : '');
   const [price, setPrice] = useState(editedProduct ? editedProduct.price.toString() : '');
   const [description, setDescription] = useState(editedProduct ? editedProduct.description : '');
@@ -23,6 +24,12 @@ const EditProductScreen = ({ navigation }) => {
   // useCallback ensures that handleFormSubmit function is not re-created when component re-renders
   // Therefore avoid entering infinite loop
   const handleFormSubmit = useCallback(() => {
+    if (!isTitleValid) {
+      Alert.alert('Wrong input!', 'Please check the errors in the form.', [
+        { text: 'OK' }
+      ]);
+      return;
+    }
     if (!editedProduct) {
       dispatch(createProduct(title, description, +price));
     } else {
@@ -37,6 +44,15 @@ const EditProductScreen = ({ navigation }) => {
     });
   }, [handleFormSubmit]);
 
+  const handleTitleChange = (text) => {
+    if (text.trim().length === 0) {
+      setIsTitleValid(false);
+    } else {
+      setIsTitleValid(true);
+    }
+    setTitle(text);
+  };
+
   return (
     <ScrollView>
       <View style={styles.form}>
@@ -45,13 +61,14 @@ const EditProductScreen = ({ navigation }) => {
           <TextInput
             style={styles.input}
             value={title}
-            onChangeText={text => setTitle(text)}
+            onChangeText={handleTitleChange}
             keyboardType='default'
             autoCapitalize='sentences'
             autoCorrect
             returnKeyType='next'
           />
         </View>
+        {!isTitleValid && <Text>Please enter a valid title!</Text>}
         {/* <View style={styles.formControl}>
           <Text style={styles.label}>Image URL</Text>
           <TextInput
