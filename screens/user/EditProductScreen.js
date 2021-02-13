@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TextInput, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector } from 'react-redux';
@@ -14,9 +14,21 @@ const EditProductScreen = ({ navigation }) => {
 
   const handlePriceChange = (newPrice) => {
     if (!editedProduct) {
-      setPrice(newPrice)
+      setPrice(newPrice);
     };
   };
+
+  // useCallback ensures that handleFormSubmit function is not re-created when component re-renders
+  // Therefore avoid entering infinite loop
+  const handleFormSubmit = useCallback(() => {
+    console.log('submitting');
+  }, []);
+
+  useEffect(() => {
+    navigation.setParams({
+      'submit': handleFormSubmit
+    })
+  }, [handleFormSubmit]);
 
   return (
     <ScrollView>
@@ -60,6 +72,7 @@ const EditProductScreen = ({ navigation }) => {
 
 EditProductScreen.navigationOptions = navigationData => {
   const productId = navigationData.navigation.getParam('productId');
+  const submitFuntion = navigationData.navigation.getParam('submit');
   return {
     headerTitle: productId ? 'Edit Product' : 'Add Product',
     headerRight: () => (
@@ -67,7 +80,7 @@ EditProductScreen.navigationOptions = navigationData => {
         <Item
           title='Save'
           iconName={Platform.OS === 'android' ? 'checkmark-outline' : 'checkmark'}
-          onPress={() => { }}
+          onPress={submitFuntion}
         />
       </HeaderButtons>
     ),
