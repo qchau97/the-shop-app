@@ -25,7 +25,7 @@ const OrdersScreen = () => {
       data={orders}
       renderItem={renderOrderItem}
     />
-  )
+  );
 };
 
 OrdersScreen.navigationOptions = navigationData => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Button } from 'react-native';
+import { Button, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '../../constants/Colors';
 import { Images } from '../../constants/Images';
@@ -20,7 +20,7 @@ const ProductDetailScreen = ({ navigation }) => {
       <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
       <Text style={styles.description}>{selectedProduct.description}</Text>
     </ScrollView>
-  )
+  );
 };
 
 ProductDetailScreen.navigationOptions = navigationData => {

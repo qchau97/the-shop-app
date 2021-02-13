@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const CartItem = ({ deletable, quantity, title, amount, onRemove }) => {
@@ -20,7 +20,7 @@ const CartItem = ({ deletable, quantity, title, amount, onRemove }) => {
         </TouchableOpacity>}
       </View>
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({

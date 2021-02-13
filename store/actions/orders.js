@@ -7,5 +7,5 @@ export const addOrder = (cartItems, totalAmount) => {
       items: cartItems,
       amount: totalAmount,
     },
-  }
+  };
 };

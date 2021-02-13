@@ -5,6 +5,6 @@ class CartItem {
     this.productTitle = productTitle;
     this.sum = sum;
   }
-};
+}
 
 export default CartItem;

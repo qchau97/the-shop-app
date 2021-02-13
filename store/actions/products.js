@@ -15,7 +15,7 @@ export const createProduct = (title, description, price) => {
     payload: {
       title,
       price,
-      description
+      description,
     },
   };
 };
@@ -25,7 +25,7 @@ export const updateProduct = (id, title, description) => {
     payload: {
       id,
       title,
-      description
+      description,
     },
   };
 };

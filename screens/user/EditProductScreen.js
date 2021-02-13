@@ -17,7 +17,7 @@ const EditProductScreen = ({ navigation }) => {
   const handlePriceChange = (newPrice) => {
     if (!editedProduct) {
       setPrice(newPrice);
-    };
+    }
   };
 
   // useCallback ensures that handleFormSubmit function is not re-created when component re-renders
@@ -27,14 +27,14 @@ const EditProductScreen = ({ navigation }) => {
       dispatch(createProduct(title, description, +price));
     } else {
       dispatch(updateProduct(editedProductId, title, description));
-    };
+    }
     navigation.goBack();
   }, [dispatch, editedProductId, title, description, price]);
 
   useEffect(() => {
     navigation.setParams({
-      'submit': handleFormSubmit
-    })
+      'submit': handleFormSubmit,
+    });
   }, [handleFormSubmit]);
 
   return (
@@ -91,8 +91,8 @@ EditProductScreen.navigationOptions = navigationData => {
         />
       </HeaderButtons>
     ),
-  }
-}
+  };
+};
 
 const styles = StyleSheet.create({
   form: {

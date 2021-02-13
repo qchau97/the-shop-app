@@ -16,7 +16,7 @@ const OrderItem = ({ items, amount, date }) => {
       <Button
         color={Colors.primary}
         title={showDetails ? 'Hide Details' : 'Show Details'}
-        onPress={() => { setShowDetails(prevState => !prevState) }}
+        onPress={() => { setShowDetails(prevState => !prevState); }}
       />
       {showDetails && (
         <View style={styles.detailItems}>
@@ -29,7 +29,7 @@ const OrderItem = ({ items, amount, date }) => {
           ))}
         </View>)}
     </Card>
-  )
+  );
 };
 
 const styles = StyleSheet.create({

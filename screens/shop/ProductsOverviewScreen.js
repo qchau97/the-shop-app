@@ -1,11 +1,11 @@
 import React from 'react';
-import { FlatList, Platform, Button } from 'react-native';
+import { Button, FlatList, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
-import { addToCart } from '../../store/actions/cart';
 import { Colors } from '../../constants/Colors';
+import { addToCart } from '../../store/actions/cart';
 
 const ProductsOverviewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
     navigation.navigate('ProductDetail', {
       productId: id,
       productTitle: title,
-    })
+    });
   };
 
   const renderProductItem = (itemData) => {
@@ -38,8 +38,8 @@ const ProductsOverviewScreen = ({ navigation }) => {
           onPress={() => dispatch(addToCart(itemData.item))}
         />
       </ProductItem>
-    )
-  }
+    );
+  };
   return (
     <FlatList
       keyExtractor={item => item.title}
@@ -72,7 +72,7 @@ ProductsOverviewScreen.navigationOptions = navigationData => {
         />
       </HeaderButtons>
     ),
-  }
+  };
 };
 
 export default ProductsOverviewScreen;

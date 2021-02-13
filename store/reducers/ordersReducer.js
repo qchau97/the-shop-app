@@ -3,7 +3,7 @@ import { ADD_ORDER } from "../actions/orders";
 
 const INITIAL_STATE = {
   orders: [],
-}
+};
 
 const ordersReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -16,7 +16,7 @@ const ordersReducer = (state = INITIAL_STATE, action) => {
       );
       return {
         ...state,
-        orders: state.orders.concat(newOrder)
+        orders: state.orders.concat(newOrder),
       };
     default:
       return state;

@@ -18,7 +18,7 @@ const CartScreen = () => {
         quantity: state.cart.items[key].quantity,
         itemPrice: state.cart.items[key].productPrice,
         itemTitle: state.cart.items[key].productTitle,
-        sum: state.cart.items[key].sum
+        sum: state.cart.items[key].sum,
       });
     }
     return cartItemsArray.sort((a, b) => a.itemId > b.itemId ? 1 : -1);
@@ -34,7 +34,7 @@ const CartScreen = () => {
         onRemove={() => dispatch(removeFromCart(itemData.item.itemId))}
       />
     );
-  }
+  };
 
   return (
     <View style={styles.screen}>

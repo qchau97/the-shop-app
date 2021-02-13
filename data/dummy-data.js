@@ -42,7 +42,7 @@ const PRODUCTS = [
     'Pen & Paper',
     "Can be used for role-playing (not the kind of role-playing you're thinking about...).",
     5.49
-  )
+  ),
 ];
 
 export default PRODUCTS;
