@@ -3,6 +3,7 @@ import { Alert, Platform, ScrollView, StyleSheet, Text, TextInput, View } from '
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
+import Input from '../../components/UI/Input';
 import { createProduct, updateProduct } from '../../store/actions/products';
 
 // Create actions
@@ -108,51 +109,35 @@ const EditProductScreen = ({ navigation }) => {
   return (
     <ScrollView>
       <View style={styles.form}>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.title}
-            onChangeText={(text) => handleInputChange('title', text)}
-            // 'newInput' is default argument which React Native would pass it automatically as the last argument in 'handleInputChange' function
-            keyboardType='default'
-            autoCapitalize='sentences'
-            autoCorrect
-            returnKeyType='next'
-          />
-        </View>
-        {!formState.inputValidities.title && <Text>Please enter a valid title!</Text>}
-        {/* <View style={styles.formControl}>
-          <Text style={styles.label}>Image URL</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.imageUrl}
-            onChangeText={(text) => handleInputChange('imageUrl', text)}
-          />
-        </View> */}
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Price</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.price}
-            onChangeText={(text) => {
-              if (!editedProduct) {
-                handleInputChange('price', text)
-              }
-            }}
-            keyboardType='decimal-pad'
-          />
-        </View>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Description</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.description}
-            onChangeText={(text) => handleInputChange('description', text)}
-            keyboardType='default'
-            autoCapitalize='sentences'
-          />
-        </View>
+        <Input
+          label='Title'
+          keyboardType='default'
+          autoCapitalize='sentences'
+          autoCorrect
+          returnKeyType='next'
+          error='Please enter a valid title!'
+        />
+        <Input
+          label='Image Url'
+          keyboardType='default'
+          returnKeyType='next'
+          error='Please enter a valid image url!'
+        />
+        <Input
+          label='Price'
+          keyboardType='decimal-pad'
+          returnKeyType='next'
+          error='Please enter a valid price!'
+        />
+        <Input
+          label='Description'
+          keyboardType='default'
+          autoCapitalize='sentences'
+          autoCorrect
+          multiline
+          numberOfLines={3}
+          error='Please enter a valid description!'
+        />
       </View>
     </ScrollView>
   );
@@ -178,19 +163,6 @@ EditProductScreen.navigationOptions = navigationData => {
 const styles = StyleSheet.create({
   form: {
     margin: 20,
-  },
-  formControl: {
-    width: '100%',
-  },
-  label: {
-    fontFamily: 'OpenSans-Bold',
-    marginVertical: 8,
-  },
-  input: {
-    paddingHorizontal: 2,
-    paddingVertical: 5,
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
   },
 });
 
