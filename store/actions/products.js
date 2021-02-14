@@ -24,7 +24,7 @@ export const fetchProducts = () => {
 
       const data = await response.json();
       // console.log(data);
-      
+
       const fetchedProducts = [];
       for (const key in data) {
         fetchedProducts.push(new Product(
@@ -44,11 +44,11 @@ export const fetchProducts = () => {
       });
     } catch (error) {
       // send to custom analytics server
-      throw error; 
+      throw error;
       // Although we throw the error, this error in the URL (.jon instead of .json) still causes us an error.
       // That's why we can't fetch our data from server.
       // In addition to having try...catch..., we should also have another check as (*).
-    }    
+    }
   };
 };
 
@@ -89,13 +89,29 @@ export const createProduct = (title, imageUrl, description, price) => {
   };
 };
 export const updateProduct = (id, title, imageUrl, description) => {
-  return {
-    type: UPDATE_PRODUCT,
-    payload: {
-      id,
-      title,
-      imageUrl,
-      description,
-    },
+  return async dispatch => {
+    await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products/${id}.json`, {
+      // For editing, we have 2 methods: 
+      // PUT: Fully override the resource with new data
+      // PATCH: Override specified part of the resource
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title,
+        imageUrl,
+        description,
+      })
+    });
+    dispatch({
+      type: UPDATE_PRODUCT,
+      payload: {
+        id,
+        title,
+        imageUrl,
+        description,
+      },
+    })
   };
 };
