@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Button, FlatList, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Button, FlatList, Platform, StyleSheet, View } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
@@ -10,6 +10,7 @@ import { fetchProducts } from '../../store/actions/products';
 
 const ProductsOverviewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const products = useSelector(state => state.products.availableProducts);
 
   const handleViewDetail = (id, title) => {
@@ -19,8 +20,14 @@ const ProductsOverviewScreen = ({ navigation }) => {
     });
   };
 
+  // Since 'async' is not allowed within useEffect (useEffect doesn't allow us to return a Promise), we have to create a dummy wrapper function instead.
   useEffect(() => {
-    dispatch(fetchProducts());
+    const loadProducts = async () => {
+      setIsLoading(true);
+      await dispatch(fetchProducts());
+      setIsLoading(false);
+    };
+    loadProducts();
   }, [dispatch]);
 
   const renderProductItem = (itemData) => {
@@ -44,6 +51,16 @@ const ProductsOverviewScreen = ({ navigation }) => {
       </ProductItem>
     );
   };
+  if (isLoading) {
+    return (
+      <View style={styles.spinner}>
+        <ActivityIndicator
+          size='large'
+          color={Colors.primary}
+        />
+      </View>
+    )
+  }
   return (
     <FlatList
       keyExtractor={item => item.title}
@@ -78,5 +95,13 @@ ProductsOverviewScreen.navigationOptions = navigationData => {
     ),
   };
 };
+
+const styles = StyleSheet.create({
+  spinner: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+});
 
 export default ProductsOverviewScreen;
