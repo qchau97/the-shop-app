@@ -9,22 +9,24 @@ export const deleteProduct = (productId) => {
   };
 };
 
-export const createProduct = (title, description, price) => {
+export const createProduct = (title, imageUrl, description, price) => {
   return {
     type: CREATE_PRODUCT,
     payload: {
       title,
+      imageUrl,
       price,
       description,
     },
   };
 };
-export const updateProduct = (id, title, description) => {
+export const updateProduct = (id, title, imageUrl, description) => {
   return {
     type: UPDATE_PRODUCT,
     payload: {
       id,
       title,
+      imageUrl,
       description,
     },
   };

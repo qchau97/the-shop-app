@@ -41,11 +41,13 @@ const EditProductScreen = ({ navigation }) => {
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : '',
+      image: editedProduct ? editedProduct.imageUrl : '',
       description: editedProduct ? editedProduct.description : '',
       price: editedProduct ? editedProduct.price.toString() : '',
     },
     inputValidities: {
       title: editedProduct ? true : false,
+      image: editedProduct ? true : false,
       description: editedProduct ? true : false,
       price: editedProduct ? true : false,
     },
@@ -62,6 +64,7 @@ const EditProductScreen = ({ navigation }) => {
     if (!editedProduct) {
       dispatch(createProduct(
         formState.inputValues.title,
+        formState.inputValues.image,
         formState.inputValues.description,
         +formState.inputValues.price
       ));
@@ -69,6 +72,7 @@ const EditProductScreen = ({ navigation }) => {
       dispatch(updateProduct(
         editedProductId,
         formState.inputValues.title,
+        formState.inputValues.image,
         formState.inputValues.description,
       ));
     }
@@ -108,6 +112,16 @@ const EditProductScreen = ({ navigation }) => {
             autoCorrect
             returnKeyType='next'
             error='Please enter a valid title!'
+            onInputChange={handleInputChange}
+          />
+          <Input
+            required
+            initialValue={editedProduct ? editedProduct.imageUrl : ''}
+            isInitiallyValid={!!editedProduct}
+            label='Image'
+            keyboardType='default'
+            returnKeyType='next'
+            error='Please enter a valid image URL!'
             onInputChange={handleInputChange}
           />
           <Input

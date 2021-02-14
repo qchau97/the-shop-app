@@ -28,7 +28,7 @@ const UserProductsScreen = ({ navigation }) => {
         },
       ],
       {
-        cancelable: true,
+        cancelable: true, // allow user to dismiss Alert by tapping outside
         // onDismiss: () => { }
       }
     );
@@ -37,8 +37,8 @@ const UserProductsScreen = ({ navigation }) => {
   const renderUserProductItem = (itemData) => {
     return (
       <ProductItem
-        id={itemData.item.id}
         title={itemData.item.title}
+        imageUrl={itemData.item.imageUrl}
         price={itemData.item.price}
         onSelect={() => handleEditUserProduct(itemData.item.id)}
       >

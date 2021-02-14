@@ -1,16 +1,15 @@
 import React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View } from 'react-native';
-import { Images } from '../../constants/Images';
 import Card from '../UI/Card';
 
-const ProductItem = ({ children, id, title, price, onSelect }) => {
+const ProductItem = ({ children, title, imageUrl, price, onSelect }) => {
   const TouchableComponent = (Platform.OS === 'android' && Platform.Version >= 21) ? TouchableNativeFeedback : TouchableOpacity;
 
   return (
     <Card style={styles.product}>
       <TouchableComponent useForeground onPress={onSelect}>
         <View>
-          <Image style={styles.image} source={Images[id]} />
+          <Image style={styles.image} source={{uri: imageUrl}} />
           <View style={styles.details}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.price}>${price.toFixed(2)}</Text>

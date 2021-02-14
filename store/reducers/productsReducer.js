@@ -14,6 +14,7 @@ const productsReducer = (state = INITIAL_STATE, action) => {
         new Date().toString(),
         'u1',
         action.payload.title,
+        action.payload.imageUrl,
         action.payload.description,
         action.payload.price,
       );
@@ -30,6 +31,7 @@ const productsReducer = (state = INITIAL_STATE, action) => {
         action.payload.id,
         state.userProducts[updatedProductIndexInUserProducts].ownerId,
         action.payload.title,
+        action.payload.imageUrl,
         action.payload.description,
         state.userProducts[updatedProductIndexInUserProducts].price,
       );

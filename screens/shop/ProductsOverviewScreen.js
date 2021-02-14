@@ -21,9 +21,8 @@ const ProductsOverviewScreen = ({ navigation }) => {
   const renderProductItem = (itemData) => {
     return (
       <ProductItem
-        id={itemData.item.id}
-        ownerId={itemData.item.ownerId}
         title={itemData.item.title}
+        imageUrl={itemData.item.imageUrl}
         price={itemData.item.price}
         onSelect={() => handleViewDetail(itemData.item.id, itemData.item.title)}
       >
