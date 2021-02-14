@@ -1,31 +1,44 @@
-import React, { useReducer } from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import React, { useEffect, useReducer } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 const INPUT_CHANGE = 'INPUT_CHANGE';
+const INPUT_BLUR = 'INPUT_BLUR';
 
 const inputReducer = (state, action) => {
   switch (action.type) {
     case INPUT_CHANGE:
+      return {
+        ...state,
+        value: action.payload.value,
+        isInputValid: action.payload.isInputValid
+      }
+    case INPUT_BLUR:
+      return {
+        ...state,
+        touched: true
+      }
     default:
       return state;
   }
 };
 
 const Input = props => {
+  const { onInputChange, label } = props;
   const [inputState, dispatchInputState] = useReducer(inputReducer, {
     value: props.initialValue ? props.initialValue : '',
     isInputValid: props.isInitiallyValid,
     touched: false,
   });
+
   const handleInputChange = (newInput) => {
-    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let isValid = true;
     if (props.required && newInput.trim().length === 0) {
       isValid = false;
     }
-    if (props.email && !emailRegex.test(newInput.toLowerCase())) {
-      isValid = false;
-    }
+    // if (props.email && !emailRegex.test(newInput.toLowerCase())) {
+    //   isValid = false;
+    // }
     if (props.min != null && +newInput < props.min) {
       isValid = false;
     }
@@ -43,20 +56,32 @@ const Input = props => {
       }
     })
   };
+
+  const handleInputBlur = () => {
+    dispatchInputState({
+      type: INPUT_BLUR,
+    });
+  };
+
+  useEffect(() => {
+    // if (inputState.touched) {
+    //   onInputChange(label, inputState.value, inputState.isInputValid);
+    // }
+    onInputChange(label, inputState.value, inputState.isInputValid);
+  }, [label, inputState, onInputChange]);
+
   return (
-    <>
-      <View style={styles.formControl}>
-        <Text style={styles.label}>{props.label}</Text>
-        <TextInput
-          {...props}
-          style={styles.input}
-          value={formState.inputValues.title}
-          onChangeText={handleInputChange}
-        // 'newInput' is default argument which React Native would pass it automatically as the last argument in 'handleInputChange' function
-        />
-      </View>
-      {!formState.inputValidities.title && <Text>{props.error}</Text>}
-    </>
+    <View style={styles.formControl}>
+      <Text style={styles.label}>{label}</Text>
+      <TextInput
+        {...props}
+        style={styles.input}
+        value={inputState.value}
+        onChangeText={(newInput) => handleInputChange(newInput)}
+        onBlur={handleInputBlur}
+      />
+      {!inputState.isInputValid && <Text>{props.error}</Text>}
+    </View>
   );
 };
 
