@@ -80,7 +80,11 @@ const Input = props => {
         onChangeText={(newInput) => handleInputChange(newInput)}
         onBlur={handleInputBlur}
       />
-      {!inputState.isInputValid && <Text>{props.error}</Text>}
+      {!inputState.isInputValid && inputState.touched && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.error}>{props.error}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -98,6 +102,14 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderBottomColor: '#ccc',
     borderBottomWidth: 1,
+  },
+  errorContainer: {
+    marginVertical: 5,
+  },
+  error: {
+    fontFamily: 'OpenSans-Regular',
+    color: '#f00',
+    fontSize: 13,
   },
 });
 
