@@ -10,14 +10,32 @@ export const deleteProduct = (productId) => {
 };
 
 export const createProduct = (title, imageUrl, description, price) => {
-  return {
-    type: CREATE_PRODUCT,
-    payload: {
-      title,
-      imageUrl,
-      price,
-      description,
-    },
+  return async dispatch => {
+    // any async code
+    // NOTE: .json is required by Firebase ONLY
+    const response = await fetch('https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.json', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title, 
+        imageUrl, 
+        description, 
+        price
+      })
+    });
+    const data = await response.json();
+    dispatch({
+      type: CREATE_PRODUCT,
+      payload: {
+        id: data.name,
+        title,
+        imageUrl,
+        price,
+        description,
+      },
+    });
   };
 };
 export const updateProduct = (id, title, imageUrl, description) => {
