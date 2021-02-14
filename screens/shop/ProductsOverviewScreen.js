@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Button, FlatList, Platform, StyleSheet, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
@@ -11,6 +11,7 @@ import { fetchProducts } from '../../store/actions/products';
 const ProductsOverviewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const products = useSelector(state => state.products.availableProducts);
 
   const handleViewDetail = (id, title) => {
@@ -21,14 +22,21 @@ const ProductsOverviewScreen = ({ navigation }) => {
   };
 
   // Since 'async' is not allowed within useEffect (useEffect doesn't allow us to return a Promise), we have to create a dummy wrapper function instead.
-  useEffect(() => {
-    const loadProducts = async () => {
-      setIsLoading(true);
+  const loadProducts = useCallback(async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
       await dispatch(fetchProducts());
-      setIsLoading(false);
-    };
+    } catch (error) {
+      setError(error.message);
+    }
+    console.log(error.message);
+    setIsLoading(false);
+  }, [dispatch, setIsLoading, setError]);
+
+  useEffect(() => {
     loadProducts();
-  }, [dispatch]);
+  }, [dispatch, loadProducts]);
 
   const renderProductItem = (itemData) => {
     return (
@@ -51,16 +59,37 @@ const ProductsOverviewScreen = ({ navigation }) => {
       </ProductItem>
     );
   };
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text>An error occurred!</Text>
+        <View style={styles.buttonContainer}>
+          <Button
+            title='Try Again'
+            color={Colors.primary}
+            onPress={loadProducts}
+          />
+        </View>
+      </View>
+    )
+  }
   if (isLoading) {
     return (
-      <View style={styles.spinner}>
+      <View style={styles.centered}>
         <ActivityIndicator
           size='large'
           color={Colors.primary}
         />
       </View>
     )
-  }
+  };
+  if (!isLoading && products.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>No products found. Maybe start adding some!</Text>
+      </View>
+    )
+  };
   return (
     <FlatList
       keyExtractor={item => item.title}
@@ -97,11 +126,14 @@ ProductsOverviewScreen.navigationOptions = navigationData => {
 };
 
 const styles = StyleSheet.create({
-  spinner: {
+  centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  buttonContainer: {
+    marginVertical: 15,
+  },
 });
 
 export default ProductsOverviewScreen;

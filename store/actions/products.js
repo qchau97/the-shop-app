@@ -9,26 +9,47 @@ export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 // with GET method, we don't set the 'headers' & 'body'
 export const fetchProducts = () => {
   return async dispatch => {
-    const response = await fetch('https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.json');
-    const data = await response.json();
-    // console.log(data);
-    const fetchedProducts = [];
-    for (const key in data) {
-      fetchedProducts.push(new Product(
-        key,
-        'u1',
-        data[key].title,
-        data[key].imageUrl,
-        data[key].description,
-        data[key].price,
-      ))
-    }
-    dispatch({
-      type: FETCH_PRODUCTS,
-      payload: {
-        products: fetchedProducts,
+    // Use try...catch... to handle errors
+    try {
+      const response = await fetch('https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.jon');
+
+      // (*)
+      // 'ok' is a field available in the response onject
+      // 'response.ok' is true if the reponse is in the 200 status code range 
+      // If it's in a different range, then fetch API by default won't throw an error
+      // However, we want to throw an error in this case so that we always end up in that catch block
+      if (!response.ok) {
+        throw new Error('Something went wrong!');
       }
-    });
+
+      const data = await response.json();
+      // console.log(data);
+
+      const fetchedProducts = [];
+      for (const key in data) {
+        fetchedProducts.push(new Product(
+          key,
+          'u1',
+          data[key].title,
+          data[key].imageUrl,
+          data[key].description,
+          data[key].price,
+        ))
+      }
+      dispatch({
+        type: FETCH_PRODUCTS,
+        payload: {
+          products: fetchedProducts,
+        }
+      });
+    } catch (error) {
+      // send to custom analytics server
+      throw error; 
+      // Although we throw the error, this error in the URL (.jon instead of .json) still causes us an error.
+      // That's why we can't fetch our data from server.
+      // In addition to having try...catch..., we should also have another check as (*).
+    }
+    
   }
 };
 
