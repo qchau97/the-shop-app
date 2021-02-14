@@ -11,7 +11,7 @@ import { fetchProducts } from '../../store/actions/products';
 const ProductsOverviewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState();
   const products = useSelector(state => state.products.availableProducts);
 
   const handleViewDetail = (id, title) => {
@@ -23,17 +23,29 @@ const ProductsOverviewScreen = ({ navigation }) => {
 
   // Since 'async' is not allowed within useEffect (useEffect doesn't allow us to return a Promise), we have to create a dummy wrapper function instead.
   const loadProducts = useCallback(async () => {
-    setError(null);
+    setError();
     setIsLoading(true);
     try {
       await dispatch(fetchProducts());
     } catch (error) {
       setError(error.message);
     }
-    console.log(error.message);
     setIsLoading(false);
   }, [dispatch, setIsLoading, setError]);
 
+  // With React Navigation DRAWER: After being created the first time we run our app, different screens are all kept in memory instead of being re-created after we navigate between screens.
+  // SOLUTION: Set up a listener to navigation events
+  useEffect(() => {
+    const willFocusSubscription = navigation.addListener('willFocus', loadProducts);
+    // Clean up function: runs whenever this effect is about to re-run or when the component is unmounted.
+    return () => {
+      willFocusSubscription.remove();
+    }
+  }, [loadProducts]);
+
+  // We still need this useEffect to initially fetch our data. 
+  // The useEffect above (for navigation) only fires after this component is already created.
+  // Thus, using it alone won't let us fetch data the first time we run our app.
   useEffect(() => {
     loadProducts();
   }, [dispatch, loadProducts]);

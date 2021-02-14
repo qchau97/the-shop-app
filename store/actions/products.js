@@ -11,7 +11,7 @@ export const fetchProducts = () => {
   return async dispatch => {
     // Use try...catch... to handle errors
     try {
-      const response = await fetch('https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.jon');
+      const response = await fetch('https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.json');
 
       // (*)
       // 'ok' is a field available in the response onject
@@ -24,7 +24,7 @@ export const fetchProducts = () => {
 
       const data = await response.json();
       // console.log(data);
-
+      
       const fetchedProducts = [];
       for (const key in data) {
         fetchedProducts.push(new Product(
@@ -48,9 +48,8 @@ export const fetchProducts = () => {
       // Although we throw the error, this error in the URL (.jon instead of .json) still causes us an error.
       // That's why we can't fetch our data from server.
       // In addition to having try...catch..., we should also have another check as (*).
-    }
-    
-  }
+    }    
+  };
 };
 
 export const deleteProduct = (productId) => {
