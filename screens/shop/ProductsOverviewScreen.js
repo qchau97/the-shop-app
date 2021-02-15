@@ -89,7 +89,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
         </View>
       </View>
     )
-  }
+  };
 
   if (isLoading) return <Loading />;
 
