@@ -33,7 +33,6 @@ const ProductsOverviewScreen = ({ navigation }) => {
       await dispatch(fetchProducts());
     } catch (error) {
       setError(error.message);
-      // console.log(error);
     }
 
     setIsRefreshing(false);

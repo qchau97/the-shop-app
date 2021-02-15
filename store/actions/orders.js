@@ -45,7 +45,6 @@ export const fetchOrders = () => {
       }
 
       const data = await response.json();
-      // console.log(data);
 
       const fetchedOrders = [];
       for (const key in data) {

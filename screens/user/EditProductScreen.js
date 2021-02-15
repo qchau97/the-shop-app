@@ -118,7 +118,7 @@ const EditProductScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView
-      behavior='padding'
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={100}>
       <ScrollView>
         <View style={styles.form}>
