@@ -17,7 +17,24 @@ export const signupAccount = (email, password) => {
       })
 
       if (!response.ok) {
-        throw new Error('Something went wrong!');
+        const errorData = await response.json();
+        const errorMessage = errorData.error.message;
+        console.log(errorMessage);
+        let message = 'Something went wrong!';
+        switch (errorMessage) {
+          case 'EMAIL_EXISTS':
+            message = 'The email address is already in use by another account!'
+            break;
+          case 'INVALID_EMAIL':
+            message = 'The email is invalid!'
+            break;
+          case 'WEAK_PASSWORD : Password should be at least 6 characters':
+            message = 'Password should be at least 6 characters!'
+            break;
+          default:
+            return message;
+        }
+        throw new Error(message);
       }
 
       const data = await response.json();
@@ -49,11 +66,28 @@ export const signinAccount = (email, password) => {
       })
 
       if (!response.ok) {
-        throw new Error('Something went wrong!');
+        const errorData = await response.json();
+        const errorMessage = errorData.error.message;
+        // console.log(errorMessage);
+        let message = 'Something went wrong!';
+        switch (errorMessage) {
+          case 'EMAIL_NOT_FOUND':
+            message = 'There is no user record corresponding to this identifier. The user may have been deleted!'
+            break;
+          case 'INVALID_PASSWORD':
+            message = 'The password is invalid or the user does not have a password!'
+            break;
+          case 'USER_DISABLED':
+            message = 'The user account has been disabled by an administrator!'
+            break;
+          default:
+            return message;
+        }
+        throw new Error(message);
       }
 
+
       const data = await response.json();
-      console.log('My DATA', data);
       dispatch({
         type: SIGNIN_ACCOUNT,
         payload: {
