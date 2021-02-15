@@ -11,18 +11,19 @@ import { fetchOrders } from '../../store/actions/orders';
 const OrdersScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
   const orders = useSelector(state => state.orders.orders);
 
   const loadOrders = useCallback(async () => {
     setError();
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(fetchOrders());
     } catch (error) {
       setError(error.message);
     }
-    setIsLoading(false);
+    setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
@@ -33,7 +34,10 @@ const OrdersScreen = ({ navigation }) => {
   }, [loadOrders]);
 
   useEffect(() => {
-    loadOrders();
+    setIsLoading(true);
+    loadOrders().then(() => {
+      setIsLoading(false);
+    });
   }, [dispatch, loadOrders]);
 
   const renderOrderItem = (itemData) => {
@@ -73,6 +77,8 @@ const OrdersScreen = ({ navigation }) => {
 
   return (
     <FlatList
+      onRefresh={loadOrders}
+      refreshing={isRefreshing}
       keyExtractor={item => item.id}
       data={orders}
       renderItem={renderOrderItem}

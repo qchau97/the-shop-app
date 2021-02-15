@@ -12,6 +12,7 @@ import { fetchProducts } from '../../store/actions/products';
 const ProductsOverviewScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
   const products = useSelector(state => state.products.availableProducts);
 
@@ -27,14 +28,15 @@ const ProductsOverviewScreen = ({ navigation }) => {
   // SOLUTION: We create a dummy wrapper function instead, and then call that function in useEffect()
   const loadProducts = useCallback(async () => {
     setError();
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(fetchProducts());
     } catch (error) {
       setError(error.message);
       // console.log(error);
     }
-    setIsLoading(false);
+
+    setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
 
   // With React Navigation DRAWER: After being created the first time we run our app, different screens are all kept in memory instead of being re-created after we navigate between screens.
@@ -51,7 +53,10 @@ const ProductsOverviewScreen = ({ navigation }) => {
   // The useEffect above (for navigation) only fires after this component is already created.
   // Thus, using it alone won't let us fetch data the first time we run our app.
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true);
+    loadProducts().then(() => {
+      setIsLoading(false);
+    });
   }, [dispatch, loadProducts]);
 
   const renderProductItem = (itemData) => {
@@ -103,6 +108,8 @@ const ProductsOverviewScreen = ({ navigation }) => {
 
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       keyExtractor={item => item.title}
       data={products}
       renderItem={renderProductItem}
