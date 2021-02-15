@@ -4,6 +4,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
+import Loading from '../../components/UI/Loading';
 import { Colors } from '../../constants/Colors';
 import { addToCart } from '../../store/actions/cart';
 import { fetchProducts } from '../../store/actions/products';
@@ -21,7 +22,9 @@ const ProductsOverviewScreen = ({ navigation }) => {
     });
   };
 
-  // Since 'async' is not allowed within useEffect (useEffect doesn't allow us to return a Promise), we have to create a dummy wrapper function instead.
+  // useEffect() NOT allow us to return a Promise
+  // Thus, 'async' is NOT allowed within useEffect()
+  // SOLUTION: We create a dummy wrapper function instead, and then call that function in useEffect()
   const loadProducts = useCallback(async () => {
     setError();
     setIsLoading(true);
@@ -29,6 +32,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
       await dispatch(fetchProducts());
     } catch (error) {
       setError(error.message);
+      // console.log(error);
     }
     setIsLoading(false);
   }, [dispatch, setIsLoading, setError]);
@@ -71,6 +75,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
       </ProductItem>
     );
   };
+
   if (error) {
     return (
       <View style={styles.centered}>
@@ -85,16 +90,9 @@ const ProductsOverviewScreen = ({ navigation }) => {
       </View>
     )
   }
-  if (isLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator
-          size='large'
-          color={Colors.primary}
-        />
-      </View>
-    )
-  };
+
+  if (isLoading) return <Loading />;
+
   if (!isLoading && products.length === 0) {
     return (
       <View style={styles.centered}>
@@ -102,6 +100,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
       </View>
     )
   };
+
   return (
     <FlatList
       keyExtractor={item => item.title}

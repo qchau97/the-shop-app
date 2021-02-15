@@ -14,10 +14,10 @@ export const fetchProducts = () => {
       const response = await fetch('https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.json');
 
       // (*)
-      // 'ok' is a field available in the response onject
-      // 'response.ok' is true if the reponse is in the 200 status code range 
-      // If it's in a different range, then fetch API by default won't throw an error
-      // However, we want to throw an error in this case so that we always end up in that catch block
+      // 'ok' is a field available in 'response' onject
+      // 'response.ok' is true if 'reponse' is in 200 status code range 
+      // If in a different range, fetch API by default won't throw an error
+      // However, we want to throw an error in this case so that we always end up in 'catch (error)' block
       if (!response.ok) {
         throw new Error('Something went wrong!');
       }
@@ -45,8 +45,7 @@ export const fetchProducts = () => {
     } catch (error) {
       // send to custom analytics server
       throw error;
-      // Although we throw the error, this error in the URL (.jon instead of .json) still causes us an error.
-      // That's why we can't fetch our data from server.
+      // Error thrown here will be catched by the 'catch (error)' implemented where we called fetchProducts().
       // In addition to having try...catch..., we should also have another check as (*).
     }
   };
@@ -54,9 +53,14 @@ export const fetchProducts = () => {
 
 export const deleteProduct = (productId) => {
   return async dispatch => {
-    await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products/${productId}.json`, {
+    const response = await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products/${productId}.json`, {
       method: 'DELETE',
     });
+
+    if (!response.ok) {
+      throw new Error('Something went wrong!');
+    }
+
     dispatch({
       type: DELETE_PRODUCT,
       payload: productId,
@@ -80,11 +84,16 @@ export const createProduct = (title, imageUrl, description, price) => {
         price
       })
     });
+
+    if (!response.ok) {
+      throw new Error('Something went wrong!');
+    }
+
     const data = await response.json();
     dispatch({
       type: CREATE_PRODUCT,
       payload: {
-        id: data.name,
+        id: data.name, // id is automatically created by Firebase
         title,
         imageUrl,
         price,
@@ -93,9 +102,10 @@ export const createProduct = (title, imageUrl, description, price) => {
     });
   };
 };
+
 export const updateProduct = (id, title, imageUrl, description) => {
   return async dispatch => {
-    await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products/${id}.json`, {
+    const response = await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products/${id}.json`, {
       // For editing, we have 2 methods: 
       // PUT: Fully override the resource with new data
       // PATCH: Override specified part of the resource
@@ -109,6 +119,11 @@ export const updateProduct = (id, title, imageUrl, description) => {
         description,
       })
     });
+
+    if (!response.ok) {
+      throw new Error('Something went wrong!');
+    }
+
     dispatch({
       type: UPDATE_PRODUCT,
       payload: {

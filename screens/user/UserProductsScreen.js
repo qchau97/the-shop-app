@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Button, FlatList, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
+import Loading from '../../components/UI/Loading';
 import { Colors } from '../../constants/Colors';
 import { deleteProduct } from '../../store/actions/products';
 
 const UserProductsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const userProducts = useSelector(state => state.products.userProducts);
 
   const handleEditUserProduct = (id) => {
@@ -17,6 +20,25 @@ const UserProductsScreen = ({ navigation }) => {
     });
   };
 
+  const deleteUserProduct = async (id) => {
+    setError();
+    setIsLoading(true);
+    try {
+      await dispatch(deleteProduct(id));
+    } catch (error) {
+      setError(error.message);
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An error occurred!', error, [{
+        text: 'Dismiss'
+      }]);
+    }
+  }, [error]);
+
   const handleDeleteUserProduct = (id) => {
     Alert.alert('Are you sure?', 'Do you really want to delete this item?',
       [
@@ -24,7 +46,7 @@ const UserProductsScreen = ({ navigation }) => {
         {
           text: 'Yes',
           style: 'destructive',
-          onPress: () => { dispatch(deleteProduct(id)); },
+          onPress: () => deleteUserProduct(id),
         },
       ],
       {
@@ -55,6 +77,8 @@ const UserProductsScreen = ({ navigation }) => {
       </ProductItem>
     );
   };
+
+  if (isLoading) return <Loading />;
 
   return (
     <FlatList
