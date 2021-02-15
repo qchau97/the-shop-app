@@ -1,11 +1,11 @@
-import React, { useCallback, useReducer } from 'react';
+import React, { useCallback, useReducer, useState } from 'react';
 import { Button, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch } from 'react-redux';
 import Card from '../../components/UI/Card';
 import Input from '../../components/UI/Input';
 import { Colors } from '../../constants/Colors';
-import { signupAccount } from '../../store/actions/auth';
+import { signinAccount, signupAccount } from '../../store/actions/auth';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -36,10 +36,15 @@ const formReducer = (state, action) => {
 
 const AuthScreen = () => {
   const dispatch = useDispatch();
+  const [isSignup, setIsSignup] = useState(false);
 
-  const handleSignup = async () => {
+  const handleAuth = async () => {
     try {
-      await dispatch(signupAccount(formState.inputValues.email, formState.inputValues.password));
+      if (isSignup) {
+        await dispatch(signupAccount(formState.inputValues.email, formState.inputValues.password));
+      } else {
+        await dispatch(signinAccount(formState.inputValues.email, formState.inputValues.password));
+      }
     } catch (error) {
       console.log(error);
     }
@@ -110,15 +115,17 @@ const AuthScreen = () => {
               />
               <View style={styles.buttonContainer}>
                 <Button
-                  title='Signup'
+                  title={isSignup ? 'Signup' : 'Login'}
                   color={Colors.primary}
-                  onPress={handleSignup} />
+                  onPress={handleAuth} />
               </View>
               <View style={styles.buttonContainer}>
                 <Button
-                  title='Switch to Login'
+                  title={`Switch to ${isSignup ? 'Login' : 'Signup'}`}
                   color={Colors.accent}
-                  onPress={() => { }} />
+                  onPress={() => {
+                    setIsSignup(prevState => !prevState)
+                  }} />
               </View>
             </ScrollView>
           </Card>
