@@ -34,7 +34,6 @@ const ProductsOverviewScreen = ({ navigation }) => {
     } catch (error) {
       setError(error.message);
     }
-
     setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
 

@@ -19,7 +19,6 @@ export const signupAccount = (email, password) => {
       if (!response.ok) {
         const errorData = await response.json();
         const errorMessage = errorData.error.message;
-        console.log(errorMessage);
         let message = 'Something went wrong!';
         switch (errorMessage) {
           case 'EMAIL_EXISTS':
@@ -38,10 +37,17 @@ export const signupAccount = (email, password) => {
       }
 
       const data = await response.json();
+      // console.log(data.email);
+      // console.log(data.expiresIn);
+      // console.log(data.idToken);
+      // console.log(data.kind);
+      // console.log(data.localId);
+      // console.log(data.refreshToken);
       dispatch({
         type: SIGNUP_ACCOUNT,
         payload: {
-
+          token: data.idToken,
+          userId: data.localId,
         }
       })
     } catch (error) {
@@ -68,7 +74,6 @@ export const signinAccount = (email, password) => {
       if (!response.ok) {
         const errorData = await response.json();
         const errorMessage = errorData.error.message;
-        // console.log(errorMessage);
         let message = 'Something went wrong!';
         switch (errorMessage) {
           case 'EMAIL_NOT_FOUND':
@@ -86,12 +91,20 @@ export const signinAccount = (email, password) => {
         throw new Error(message);
       }
 
-
       const data = await response.json();
+      // console.log(data.displayName);
+      // console.log(data.email);
+      // console.log(data.expiresIn);
+      // console.log(data.idToken);
+      // console.log(data.kind);
+      // console.log(data.localId);
+      // console.log(data.refreshToken);
+      // console.log(data.registered);
       dispatch({
         type: SIGNIN_ACCOUNT,
         payload: {
-
+          token: data.idToken,
+          userId: data.localId,
         }
       })
     } catch (error) {

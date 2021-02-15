@@ -39,7 +39,11 @@ const CartScreen = () => {
 
   const handleOrderSubmit = async () => {
     setIsLoading(true);
-    await dispatch(addOrder(cartItems, totalAmount));
+    try {
+      await dispatch(addOrder(cartItems, totalAmount));
+    } catch (error) {
+      console.log(error.message);
+    }
     setIsLoading(false);
   };
 
@@ -48,11 +52,11 @@ const CartScreen = () => {
       <Card style={styles.summary}>
         <Text style={styles.summaryText}>Total: <Text style={styles.amount}>${Math.round(totalAmount.toFixed(2) * 100) / 100}</Text></Text>
         {isLoading ? <ActivityIndicator size='large' color={Colors.primary} /> : <Button
-            color={Colors.accent}
-            title='Order Now'
-            disabled={cartItems.length === 0}
-            onPress={handleOrderSubmit}
-          />}
+          color={Colors.accent}
+          title='Order Now'
+          disabled={cartItems.length === 0}
+          onPress={handleOrderSubmit}
+        />}
       </Card>
       <FlatList
         keyExtractor={item => item.itemId}

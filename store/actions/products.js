@@ -51,8 +51,9 @@ export const fetchProducts = () => {
 };
 
 export const deleteProduct = (productId) => {
-  return async dispatch => {
-    const response = await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products/${productId}.json`, {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const response = await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}`, {
       method: 'DELETE',
     });
 
@@ -68,10 +69,11 @@ export const deleteProduct = (productId) => {
 };
 
 export const createProduct = (title, imageUrl, description, price) => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     // any async code
     // NOTE: .json is required by Firebase ONLY
-    const response = await fetch('https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.json', {
+    const token = getState().auth.token;
+    const response = await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.json?auth=${token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -103,8 +105,12 @@ export const createProduct = (title, imageUrl, description, price) => {
 };
 
 export const updateProduct = (id, title, imageUrl, description) => {
-  return async dispatch => {
-    const response = await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products/${id}.json`, {
+  // We are in the action creator which means we have no easy access to Redux store to get the token.
+  // With the help of Redux Thunk, we have 2nd argument beside 'dispatch', which is 'getState()' function, to have all our states from Redux store when we dispatch an action.
+  return async (dispatch, getState) => {
+    // console.log(getState());
+    const token = getState().auth.token;
+    const response = await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}`, {
       // For editing, we have 2 methods: 
       // PUT: Fully override the resource with new data
       // PATCH: Override specified part of the resource

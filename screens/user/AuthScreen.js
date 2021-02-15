@@ -35,7 +35,7 @@ const formReducer = (state, action) => {
   }
 };
 
-const AuthScreen = () => {
+const AuthScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
@@ -50,10 +50,11 @@ const AuthScreen = () => {
       } else {
         await dispatch(signinAccount(formState.inputValues.email, formState.inputValues.password));
       }
+      navigation.navigate('Shop');
     } catch (error) {
       setError(error.message);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
