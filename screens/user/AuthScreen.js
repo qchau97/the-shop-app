@@ -41,22 +41,6 @@ const AuthScreen = ({ navigation }) => {
   const [error, setError] = useState();
   const [isSignup, setIsSignup] = useState(false);
 
-  const handleAuth = async () => {
-    setError();
-    setIsLoading(true);
-    try {
-      if (isSignup) {
-        await dispatch(signupAccount(formState.inputValues.email, formState.inputValues.password));
-      } else {
-        await dispatch(signinAccount(formState.inputValues.email, formState.inputValues.password));
-      }
-      navigation.navigate('Shop');
-    } catch (error) {
-      setError(error.message);
-      setIsLoading(false);
-    }
-  };
-
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: '',
@@ -70,7 +54,6 @@ const AuthScreen = ({ navigation }) => {
   });
 
   const handleInputChange = useCallback((inputLabel, inputValue, inputValidity) => {
-    console.log(inputLabel.toLowerCase(), inputValue, inputValidity);
     dispatchFormState({
       type: FORM_INPUT_UPDATE,
       payload: {
@@ -80,6 +63,24 @@ const AuthScreen = ({ navigation }) => {
       }
     });
   }, [dispatchFormState]);
+
+  const handleAuth = async () => {
+    let action;
+    if (isSignup) {
+      action = signupAccount(formState.inputValues.email, formState.inputValues.password);
+    } else {
+      action = signinAccount(formState.inputValues.email, formState.inputValues.password);
+    }
+    setError();
+    setIsLoading(true);
+    try {
+      await dispatch(action);
+      navigation.navigate('Shop');
+    } catch (error) {
+      setError(error.message);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (error) {
@@ -97,7 +98,6 @@ const AuthScreen = ({ navigation }) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <LinearGradient
-          // colors={['#ffedff', '#ffe3ff']}
           colors={['#ffe3ff', '#ffe3aa']}
           style={styles.gradient}
         >

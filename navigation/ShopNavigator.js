@@ -1,6 +1,5 @@
 import React from 'react';
 import { Platform, Button, View } from 'react-native';
-// import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
@@ -106,7 +105,7 @@ const ShopNavigator = createDrawerNavigator(
             <DrawerItems {...props} />
             <Button title='Logout' color={Colors.primary} onPress={() => {
               dispatch(logoutUser());
-              props.navigation.navigate('Auth');
+              // props.navigation.navigate('Auth');
             }} />
           </SafeAreaView>
         </View>

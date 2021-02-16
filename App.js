@@ -1,13 +1,13 @@
 import React from 'react';
 import 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore, applyMiddleware } from 'redux';
-import ShopNavigator from './navigation/ShopNavigator';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import ReduxThunk from 'redux-thunk';
+import NavigationContainer from './navigation/NavigationContainer';
+import authReducer from './store/reducers/authReducer';
 import cartReducer from './store/reducers/cartReducer';
 import ordersReducer from './store/reducers/ordersReducer';
 import productsReducer from './store/reducers/productsReducer';
-import ReduxThunk from 'redux-thunk';
-import authReducer from './store/reducers/authReducer';
 
 const rootReducer = combineReducers({
   products: productsReducer,
@@ -18,10 +18,12 @@ const rootReducer = combineReducers({
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
+// Since we setup Redux here, Redux store is only available inside 'ShopNavigator'
+// SOLUTION: Wrap 'ShopNavigator' inside another component, which is 'NavigationContainer', so that we have access to Redux store from that component
 const App = () => {
   return (
     <Provider store={store}>
-      <ShopNavigator />
+      <NavigationContainer />
     </Provider>
   );
 };

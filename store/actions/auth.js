@@ -25,8 +25,7 @@ const setLogoutTimer = (expirationTime) => {
   return dispatch => {
     timer = setTimeout(() => {
       dispatch(logoutUser());
-    }, expirationTime / 1000);
-    // console.log(timer);
+    }, expirationTime);
   };
 };
 
@@ -37,11 +36,13 @@ const clearLogoutTimer = () => {
 };
 
 export const logoutUser = () => {
-  AsyncStorage.removeItem('userData');
-  // Clear the timer when user manually logs out
-  clearLogoutTimer();
-  return {
-    type: LOGOUT_USER,
+  return async dispatch => {
+    await AsyncStorage.removeItem('userData');
+    // Clear the timer when user manually logs out
+    clearLogoutTimer();
+    dispatch({
+      type: LOGOUT_USER,
+    })
   }
 };
 
@@ -58,7 +59,7 @@ export const signupAccount = (email, password) => {
           password: password,
           returnSecureToken: true
         })
-      })
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -69,7 +70,7 @@ export const signupAccount = (email, password) => {
             message = 'The email address is already in use by another account!'
             break;
           case 'INVALID_EMAIL':
-            message = 'The email is invalid!'
+            message = 'Please enter a valid email address!'
             break;
           case 'WEAK_PASSWORD : Password should be at least 6 characters':
             message = 'Password should be at least 6 characters!'
@@ -105,8 +106,8 @@ export const signinAccount = (email, password) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          email: email,
-          password: password,
+          email,
+          password,
           returnSecureToken: true
         })
       })
@@ -118,6 +119,9 @@ export const signinAccount = (email, password) => {
         switch (errorMessage) {
           case 'EMAIL_NOT_FOUND':
             message = 'There is no user record corresponding to this identifier. The user may have been deleted!'
+            break;
+          case 'INVALID_EMAIL':
+            message = 'Please enter a valid email address!'
             break;
           case 'INVALID_PASSWORD':
             message = 'The password is invalid or the user does not have a password!'
@@ -157,6 +161,6 @@ const storeData = (token, userId, expirationDate) => {
     token: token,
     userId: userId,
     expirationDate: expirationDate.toISOString(),
-  }))
+  }));
 };
 
