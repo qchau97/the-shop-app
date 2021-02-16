@@ -1,5 +1,16 @@
-export const SIGNUP_ACCOUNT = 'SIGNUP_ACCOUNT';
-export const SIGNIN_ACCOUNT = 'SIGNIN_ACCOUNT';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export const AUTHENTICATE_USER = 'AUTHENTICATE_USER';
+
+export const authenticateUser = (token, userId) => {
+  return {
+    type: AUTHENTICATE_USER,
+    payload: {
+      token,
+      userId,
+    }
+  };
+};
 
 export const signupAccount = (email, password) => {
   return async dispatch => {
@@ -43,13 +54,9 @@ export const signupAccount = (email, password) => {
       // console.log(data.kind);
       // console.log(data.localId);
       // console.log(data.refreshToken);
-      dispatch({
-        type: SIGNUP_ACCOUNT,
-        payload: {
-          token: data.idToken,
-          userId: data.localId,
-        }
-      })
+      dispatch(authenticateUser(data.idToken, data.localId));
+      const expirationDate = new Date(new Date().getTime() + parseInt(data.expiresIn) * 1000);
+      storeData(data.idToken, data.localId, expirationDate);
     } catch (error) {
       throw error;
     }
@@ -100,15 +107,22 @@ export const signinAccount = (email, password) => {
       // console.log(data.localId);
       // console.log(data.refreshToken);
       // console.log(data.registered);
-      dispatch({
-        type: SIGNIN_ACCOUNT,
-        payload: {
-          token: data.idToken,
-          userId: data.localId,
-        }
-      })
+      dispatch(authenticateUser(data.idToken, data.localId));
+      // getTime() returns the current timestamp in MILLISECONDs since 1970
+      // data.expiresIn returns an amount of time in SECONDs
+      // 'expirationDate' must be an object
+      const expirationDate = new Date(new Date().getTime() + parseInt(data.expiresIn) * 1000);
+      storeData(data.idToken, data.localId, expirationDate);
     } catch (error) {
       throw error;
     }
   };
+};
+
+const storeData = (token, userId, expirationDate) => {
+  AsyncStorage.setItem('userData', JSON.stringify({
+    token: token,
+    userId: userId,
+    expirationDate: expirationDate.toISOString(),
+  }))
 };

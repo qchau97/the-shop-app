@@ -3,6 +3,7 @@ import { FlatList, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import OrderItem from '../../components/shop/OrderItem';
+import CenteredView from '../../components/UI/CenteredView';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
 import Loading from '../../components/UI/Loading';
 import Notification from '../../components/UI/Notification';

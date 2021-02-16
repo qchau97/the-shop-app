@@ -17,7 +17,7 @@ export const addOrder = (cartItems, totalAmount) => {
         body: JSON.stringify({
           cartItems,
           totalAmount,
-          date: date.toISOString(), // get the same timestamp locally & on the server when loading orders
+          date: date.toISOString(), // get the same timestamp in standardized format
         })
       });
 
