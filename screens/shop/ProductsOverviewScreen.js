@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import { Button, FlatList, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
+import ActionButton from '../../components/UI/ActionButton';
+import CenteredView from '../../components/UI/CenteredView';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
 import Loading from '../../components/UI/Loading';
+import Notification from '../../components/UI/Notification';
 import { Colors } from '../../constants/Colors';
 import { addToCart } from '../../store/actions/cart';
 import { fetchProducts } from '../../store/actions/products';
@@ -81,16 +84,10 @@ const ProductsOverviewScreen = ({ navigation }) => {
 
   if (error) {
     return (
-      <View style={styles.centered}>
-        <Text>An error occurred!</Text>
-        <View style={styles.buttonContainer}>
-          <Button
-            title='Try Again'
-            color={Colors.primary}
-            onPress={loadProducts}
-          />
-        </View>
-      </View>
+      <CenteredView>
+        <Notification message='An error occurred!' />
+        <ActionButton onPress={loadProducts} />
+      </CenteredView>
     )
   };
 
@@ -98,9 +95,9 @@ const ProductsOverviewScreen = ({ navigation }) => {
 
   if (!isLoading && products.length === 0) {
     return (
-      <View style={styles.centered}>
-        <Text>No products found. Maybe start adding some!</Text>
-      </View>
+      <CenteredView>
+        <Notification message='No products found. Maybe start adding some!' />
+      </CenteredView>
     )
   };
 
@@ -140,16 +137,5 @@ ProductsOverviewScreen.navigationOptions = navigationData => {
     ),
   };
 };
-
-const styles = StyleSheet.create({
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    marginVertical: 15,
-  },
-});
 
 export default ProductsOverviewScreen;

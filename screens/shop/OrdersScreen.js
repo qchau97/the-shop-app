@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import OrderItem from '../../components/shop/OrderItem';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
 import Loading from '../../components/UI/Loading';
-import { Colors } from '../../constants/Colors';
+import Notification from '../../components/UI/Notification';
 import { fetchOrders } from '../../store/actions/orders';
 
 const OrdersScreen = ({ navigation }) => {
@@ -50,28 +50,22 @@ const OrdersScreen = ({ navigation }) => {
     );
   };
 
+  if (isLoading) return <Loading />;
+
   if (error) {
     return (
-      <View style={styles.centered}>
-        <Text>An error occurred!</Text>
-        <View style={styles.buttonContainer}>
-          <Button
-            title='Try Again'
-            color={Colors.primary}
-            onPress={loadOrders}
-          />
-        </View>
-      </View>
+      <CenteredView>
+        <Notification message='An error occurred!' />
+        <ActionButton onPress={loadOrders} />
+      </CenteredView>
     )
   };
 
-  if (isLoading) return <Loading />;
-
   if (!isLoading && orders.length === 0) {
     return (
-      <View style={styles.centered}>
-        <Text>No orders found. Maybe start adding some!</Text>
-      </View>
+      <CenteredView>
+        <Notification message='No orders found. Maybe start ordering some products?' />
+      </CenteredView>
     )
   };
 
@@ -100,17 +94,6 @@ OrdersScreen.navigationOptions = navigationData => {
     ),
   };
 };
-
-const styles = StyleSheet.create({
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    marginVertical: 15,
-  },
-});
 
 export default OrdersScreen;
 

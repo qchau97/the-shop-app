@@ -3,8 +3,10 @@ import { Alert, Button, FlatList, Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
+import CenteredView from '../../components/UI/CenteredView';
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton';
 import Loading from '../../components/UI/Loading';
+import Notification from '../../components/UI/Notification';
 import { Colors } from '../../constants/Colors';
 import { deleteProduct } from '../../store/actions/products';
 
@@ -79,6 +81,14 @@ const UserProductsScreen = ({ navigation }) => {
   };
 
   if (isLoading) return <Loading />;
+
+  if (userProducts.length === 0) {
+    return (
+      <CenteredView>
+        <Notification message='No products found. Maybe start adding some!' />
+      </CenteredView>
+    )
+  };
 
   return (
     <FlatList

@@ -1,10 +1,9 @@
-import PRODUCTS from '../../data/dummy-data';
 import Product from '../../models/product';
 import { CREATE_PRODUCT, DELETE_PRODUCT, FETCH_PRODUCTS, UPDATE_PRODUCT } from '../actions/products';
 
 const INITIAL_STATE = {
-  availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter(product => product.ownerId === 'u1'),
+  availableProducts: [],
+  userProducts: [],
 };
 
 const productsReducer = (state = INITIAL_STATE, action) => {
@@ -12,12 +11,12 @@ const productsReducer = (state = INITIAL_STATE, action) => {
     case FETCH_PRODUCTS:
       return {
         availableProducts: action.payload.products,
-        userProducts: action.payload.products.filter(product => product.ownerId === 'u1'),
+        userProducts: action.payload.userProducts,
       }
     case CREATE_PRODUCT:
       const newProduct = new Product(
         action.payload.id,
-        'u1',
+        action.payload.ownerId,
         action.payload.title,
         action.payload.imageUrl,
         action.payload.description,

@@ -8,7 +8,8 @@ export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 // fetch() default method is GET
 // with GET method, we don't set the 'headers' & 'body'
 export const fetchProducts = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
     // Use try...catch... to handle errors
     try {
       const response = await fetch('https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.json');
@@ -28,7 +29,7 @@ export const fetchProducts = () => {
       for (const key in data) {
         fetchedProducts.push(new Product(
           key,
-          'u1',
+          data[key].ownerId,
           data[key].title,
           data[key].imageUrl,
           data[key].description,
@@ -39,6 +40,7 @@ export const fetchProducts = () => {
         type: FETCH_PRODUCTS,
         payload: {
           products: fetchedProducts,
+          userProducts: fetchedProducts.filter(product => product.ownerId === userId),
         }
       });
     } catch (error) {
@@ -73,16 +75,18 @@ export const createProduct = (title, imageUrl, description, price) => {
     // any async code
     // NOTE: .json is required by Firebase ONLY
     const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const response = await fetch(`https://rn-complete-guide-247d9-default-rtdb.firebaseio.com/products.json?auth=${token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        ownerId: userId,
         title,
         imageUrl,
         description,
-        price
+        price,
       })
     });
 
@@ -95,10 +99,11 @@ export const createProduct = (title, imageUrl, description, price) => {
       type: CREATE_PRODUCT,
       payload: {
         id: data.name, // id is automatically created by Firebase
+        ownerId: userId,
         title,
         imageUrl,
-        price,
         description,
+        price,
       },
     });
   };

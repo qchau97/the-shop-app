@@ -1,24 +1,17 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { Colors } from '../../constants/Colors';
+import CenteredView from './CenteredView';
 
 const Loading = () => {
   return (
-    <View style={styles.centered}>
-        <ActivityIndicator
-          size='large'
-          color={Colors.primary}
-        />
-      </View>
+    <CenteredView>
+      <ActivityIndicator
+        size='large'
+        color={Colors.primary}
+      />
+    </CenteredView>
   );
 };
-
-const styles = StyleSheet.create({
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default Loading;
