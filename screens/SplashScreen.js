@@ -20,8 +20,12 @@ const SplashScreen = ({ navigation }) => {
         navigation.navigate('Auth');
         return;
       }
+      // SplashScreen fires whenever user starts app
+      // We don't know how long the token will expire
+      // Thus, we have to calculate the remaining time until the expirationDate
+      const expirationTime = new Date(expirationDate).getTime() - new Date().getTime();
       navigation.navigate('Shop');
-      dispatch(authenticateUser(token, userId));
+      dispatch(authenticateUser(token, userId, expirationTime));
     }
     getData();
   }, [])

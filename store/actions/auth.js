@@ -3,17 +3,43 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const AUTHENTICATE_USER = 'AUTHENTICATE_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
 
-export const authenticateUser = (token, userId) => {
-  return {
-    type: AUTHENTICATE_USER,
-    payload: {
-      token,
-      userId,
-    }
+export const authenticateUser = (token, userId, expirationTime) => {
+  return dispatch => {
+    dispatch(setLogoutTimer(expirationTime));
+    dispatch({
+      type: AUTHENTICATE_USER,
+      payload: {
+        token,
+        userId,
+      }
+    });
+  };
+};
+
+let timer;
+
+// Set up a timer to make sure the user is logged out immediately when the token is expired
+// expirationTime is in MILLISECONDs
+// setTimeout() is an async function
+const setLogoutTimer = (expirationTime) => {
+  return dispatch => {
+    timer = setTimeout(() => {
+      dispatch(logoutUser());
+    }, expirationTime / 1000);
+    // console.log(timer);
+  };
+};
+
+const clearLogoutTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
   };
 };
 
 export const logoutUser = () => {
+  AsyncStorage.removeItem('userData');
+  // Clear the timer when user manually logs out
+  clearLogoutTimer();
   return {
     type: LOGOUT_USER,
   }
@@ -61,7 +87,7 @@ export const signupAccount = (email, password) => {
       // console.log(data.kind);
       // console.log(data.localId);
       // console.log(data.refreshToken);
-      dispatch(authenticateUser(data.idToken, data.localId));
+      dispatch(authenticateUser(data.idToken, data.localId, parseInt(data.expiresIn) * 1000));
       const expirationDate = new Date(new Date().getTime() + parseInt(data.expiresIn) * 1000);
       storeData(data.idToken, data.localId, expirationDate);
     } catch (error) {
@@ -114,7 +140,7 @@ export const signinAccount = (email, password) => {
       // console.log(data.localId);
       // console.log(data.refreshToken);
       // console.log(data.registered);
-      dispatch(authenticateUser(data.idToken, data.localId));
+      dispatch(authenticateUser(data.idToken, data.localId, parseInt(data.expiresIn) * 1000));
       // getTime() returns the current timestamp in MILLISECONDs since 1970
       // data.expiresIn returns an amount of time in SECONDs
       // 'expirationDate' must be an object
@@ -133,3 +159,4 @@ const storeData = (token, userId, expirationDate) => {
     expirationDate: expirationDate.toISOString(),
   }))
 };
+
