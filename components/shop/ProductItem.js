@@ -35,8 +35,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'OpenSans-Bold',
-    fontSize: 18,
+    fontSize: 15,
     marginVertical: 2,
+    textAlign: 'center',
   },
   price: {
     fontFamily: 'OpenSans-Regular',

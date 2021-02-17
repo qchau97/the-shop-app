@@ -80,15 +80,17 @@ export const ProductsNavigator = () => {
 const OrdersStackNavigator = createStackNavigator();
 
 const OrdersNavigator = () => {
-  <OrdersStackNavigator.Navigator
-    screenOptions={defaultNavOptions}
-  >
-    <OrdersStackNavigator.Screen
-      name='Orders'
-      component={OrdersScreen}
-      options={ordersScreenOptions}
-    />
-  </OrdersStackNavigator.Navigator>
+  return (
+    <OrdersStackNavigator.Navigator
+      screenOptions={defaultNavOptions}
+    >
+      <OrdersStackNavigator.Screen
+        name='Orders'
+        component={OrdersScreen}
+        options={ordersScreenOptions}
+      />
+    </OrdersStackNavigator.Navigator>
+  )
 }
 
 // const OrdersNavigator = createStackNavigator(

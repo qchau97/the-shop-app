@@ -43,10 +43,10 @@ const ProductsOverviewScreen = ({ navigation }) => {
   // With React Navigation DRAWER: After being created the first time we run our app, different screens are all kept in memory instead of being re-created after we navigate between screens.
   // SOLUTION: Set up a listener to navigation events
   useEffect(() => {
-    const willFocusSubscription = navigation.addListener('willFocus', loadProducts);
+    const unsubscribe = navigation.addListener('focus', loadProducts);
     // Clean up function: runs whenever this effect is about to re-run or when the component is unmounted.
     return () => {
-      willFocusSubscription.remove();
+      unsubscribe();
     }
   }, [loadProducts]);
 

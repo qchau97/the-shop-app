@@ -34,11 +34,14 @@ const formReducer = (state, action) => {
   }
 };
 
-const EditProductScreen = ({ navigation }) => {
+const EditProductScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
-  const editedProductId = navigation.getParam('productId');
+  // React Navigation 5 has no getParam() function
+  // Instead, there is another prop beside 'navigation' prop: 'route'
+  // 'params' key holds an object with all params received as key-value pairs
+  const editedProductId = route.params ? route.params.productId : null;
   const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === editedProductId));
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -97,9 +100,19 @@ const EditProductScreen = ({ navigation }) => {
     }
   }, [error])
 
+  // With React Navigation 5, we don't use setParams()
+  // Instead, we use setOptions() of 'naviagation' props to 'communicate' between navigation and component
   useEffect(() => {
-    navigation.setParams({
-      'submit': handleFormSubmit,
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+          <Item
+            title='Save'
+            iconName={Platform.OS === 'android' ? 'checkmark-outline' : 'checkmark'}
+            onPress={handleFormSubmit}
+          />
+        </HeaderButtons>
+      ),
     });
   }, [handleFormSubmit]);
 
@@ -177,19 +190,9 @@ const EditProductScreen = ({ navigation }) => {
 };
 
 export const screenOptions = navigationData => {
-  const productId = navigationData.navigation.getParam('productId');
-  const submitFuntion = navigationData.navigation.getParam('submit');
+  const productId = navigationData.route.params ? navigationData.route.params.productId : '';
   return {
     headerTitle: productId ? 'Edit Product' : 'Add Product',
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item
-          title='Save'
-          iconName={Platform.OS === 'android' ? 'checkmark-outline' : 'checkmark'}
-          onPress={submitFuntion}
-        />
-      </HeaderButtons>
-    ),
   };
 };
 
