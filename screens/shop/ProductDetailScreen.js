@@ -22,7 +22,7 @@ const ProductDetailScreen = ({ navigation }) => {
   );
 };
 
-ProductDetailScreen.navigationOptions = navigationData => {
+export const screenOptions = navigationData => {
   return {
     headerTitle: navigationData.navigation.getParam('productTitle'),
   };

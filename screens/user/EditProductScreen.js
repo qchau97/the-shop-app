@@ -176,7 +176,7 @@ const EditProductScreen = ({ navigation }) => {
   );
 };
 
-EditProductScreen.navigationOptions = navigationData => {
+export const screenOptions = navigationData => {
   const productId = navigationData.navigation.getParam('productId');
   const submitFuntion = navigationData.navigation.getParam('submit');
   return {
