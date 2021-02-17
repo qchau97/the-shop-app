@@ -28,9 +28,9 @@ const OrdersScreen = ({ navigation }) => {
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
-    const willFocusSubscription = navigation.addListener('willFocus', loadOrders);
+    const unsubscribe = navigation.addListener('focus', loadOrders);
     return () => {
-      willFocusSubscription.remove();
+      unsubscribe();
     }
   }, [loadOrders]);
 
