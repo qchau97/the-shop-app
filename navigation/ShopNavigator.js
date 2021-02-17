@@ -12,7 +12,7 @@ import OrdersScreen, { screenOptions as ordersScreenOptions } from '../screens/s
 import ProductDetailScreen, { screenOptions as productDetailScreenOptions } from '../screens/shop/ProductDetailScreen';
 import ProductsOverviewScreen, { screenOptions as productsOverviewScreenOptions } from '../screens/shop/ProductsOverviewScreen';
 import SplashScreen from '../screens/SplashScreen';
-import AuthScreen from '../screens/user/AuthScreen';
+import AuthScreen, { screenOptions as authScreenOptions } from '../screens/user/AuthScreen';
 import EditProductScreen, { screenOptions as editProductScreenOptions } from '../screens/user/EditProductScreen';
 import UserProductsScreen, { screenOptions as userProductsScreenOptions } from '../screens/user/UserProductsScreen';
 import { logoutUser } from '../store/actions/auth';
@@ -150,7 +150,7 @@ const AdminNavigator = () => {
 
 const ShopDrawerNavigator = createDrawerNavigator();
 
-const ShopNavigator = () => {
+export const ShopNavigator = () => {
   const dispatch = useDispatch();
   return (
     <ShopDrawerNavigator.Navigator
@@ -241,18 +241,35 @@ const ShopNavigator = () => {
 //   }
 // );
 
-const AuthNavigator = createStackNavigator(
-  {
-    Auth: AuthScreen,
-  },
-  {
-    defaultNavigationOptions: defaultNavOptions
-  });
+const AuthStackNavigator = createStackNavigator();
 
-const MainNavigator = createSwitchNavigator({
-  Startup: SplashScreen,
-  Auth: AuthNavigator,
-  Shop: ShopNavigator,
-})
+export const AuthNavigator = () => {
+  return (
+    <AuthStackNavigator.Navigator
+      screenOptions={defaultNavOptions}
+    >
+      <AuthStackNavigator.Screen
+        name='Auth'
+        component={AuthScreen}
+        options={authScreenOptions}
+      />
+    </AuthStackNavigator.Navigator>
+  )
+}
 
-export default createAppContainer(MainNavigator);
+// const AuthNavigator = createStackNavigator(
+//   {
+//     Auth: AuthScreen,
+//   },
+//   {
+//     defaultNavigationOptions: defaultNavOptions
+//   }
+// );
+
+// const MainNavigator = createSwitchNavigator({
+//   Startup: SplashScreen,
+//   Auth: AuthNavigator,
+//   Shop: ShopNavigator,
+// })
+
+// export default createAppContainer(MainNavigator);
